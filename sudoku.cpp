@@ -56,13 +56,118 @@ int Sudoku::show()
   int i,j,k=0;
   for (i=0; i<9; i++)
   {
+    std::cout << "\t\t";
     for (j=0; j<9; j++)
 	{
-	  std::cout << grid[row-1][col-1][9];
+	  k = grid[i][j][9];
+	  if (k==0)
+	    std::cout << ".";
+	  else
+	    std::cout << k;
 	}
-	std::cout << endl;
+	std::cout << std::endl;
   }
 }
 
-
+int Sudoku::check(int row, int col, int digit)
+{
+  int i,j,k,l, conflict_found=0;
+  
+  // check the row for conflicts
+//  std::cerr << "\nrow";
+  for (i=0; i<9; i++) 
+  {
+    if (i!=col)
+	{
+	  k=grid[row][i][10];
+	  if (k == digit)
+	  {
+	    conflict_found=1;
+//		std::cerr << "k=d(" << k << ")";
+		grid[row][col][k-1]=1;
+	  }
+	  else
+	  {
+	    if (k != 0)
+		{
+		  grid[row][col][k-1]=1;
+//		  std::cerr << "k!d(" << k << ")";
+		}
+	  }
+	}
+  }
+  
+  // check the column for conflicts
+//  std::cerr << "\ncol";
+  for (j=0; j<9; j++)
+  {
+    if (j!=row)
+	{
+	  k=grid[j][col][10];
+	  if (k==digit)
+	  {
+	    conflict_found=1;
+//		std::cerr << "k=d(" << k << ")";
+		grid[row][col][k-1]=1;
+	  }
+	  else
+	  {
+	    if (k != 0)
+		{
+		  grid[row][col][k-1]=1;
+//		  std::cerr << "k!d(" << k << ")";
+		}
+	  }
+	}
+  }
+  // check the box for conflicts
+//  std::cerr << "\nbox";
+  for (i=row-(row%3); i<(row-(row%3)+3); i++)
+  {
+    for (j=col-(col%3); j<(col-(col%3)+3); j++)
+	{
+	  if (i!=row || j!=col)
+	  {
+//	    std::cerr << "[" << i << "," << j << "]";
+	    k=grid[i][j][10];
+		if (k==digit)
+		{
+		  conflict_found=1;
+//		  std::cerr << "k=d(" << k << ")";
+		  grid[row][col][k-1]=1;
+		}
+		else
+		{
+		  if (k != 0)
+		  {
+		    grid[row][col][k-1]=1;
+//			std::cerr << "k!d(" << k << ")";
+	      }
+		}
+	  }	  
+	}
+  }
+  
+//  std::cerr << "\n";
+  
+  return conflict_found;
+}
+  
+int Sudoku::listsup(int row, int col)
+{
+  int i;
+  for (i=0; i<9; i++)
+  {
+    if (grid[row][col][i]==1)
+	{
+      std::cout << "X";
+	}
+	else
+	{
+	  std::cout << i+1;
+	}
+  }
+  std::cout << std::endl;
+  return 1;
+}
   
